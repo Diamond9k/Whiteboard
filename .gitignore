@@ -1,0 +1,5 @@
+node_modules/
+dashboard-ui/node_modules/
+dashboard/index.html
+*.log
+.DS_Store

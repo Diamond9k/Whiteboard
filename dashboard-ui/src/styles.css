@@ -1173,3 +1173,8 @@ body.modal-open { overflow: hidden; }
   .overlay { padding-top: 10px; }
   .pal-foot { display: none; }
 }
+
+/* Linked content rows: only when the synced item carries a real https address. */
+a.content-item.is-link:hover { background: var(--surface-2); }
+a.content-item.is-link:hover .ci-title { color: var(--accent); }
+.ci-open { margin-left: auto; color: var(--accent); flex: none; }

@@ -253,6 +253,36 @@
   }
   const facultyFrom = (results) => facultyInfo(results).named;
 
+  /**
+   * A content item is openable only when the payload itself carries an https
+   * Blackboard or Pearson address. API self-links are not pages, so they are dropped.
+   * Nothing is built from the item id.
+   */
+  function contentLink(r) {
+    const h = isObj(r.contentHandler) ? r.contentHandler : null;
+    const candidates = [];
+    if (h) {
+      if (nonEmpty(h.url)) candidates.push(str(h.url));
+      if (nonEmpty(h.targetUrl)) candidates.push(str(h.targetUrl));
+      if (nonEmpty(h.launchUrl)) candidates.push(str(h.launchUrl));
+    }
+    if (nonEmpty(r.url)) candidates.push(str(r.url));
+    if (Array.isArray(r.links)) {
+      for (const l of r.links) {
+        if (!isObj(l) || !nonEmpty(l.href)) continue;
+        const rel = str(l.rel) + ' ' + str(l.type);
+        if (rel && !/alternate|launch|view|canonical/i.test(rel)) continue;
+        candidates.push(str(l.href));
+      }
+    }
+    for (const c of candidates) {
+      const abs = c.startsWith('/') ? BB_ORIGIN + c : c;
+      const safe = safeUrl(abs);
+      if (safe && !/\/learn\/api\//.test(safe)) return safe;
+    }
+    return null;
+  }
+
   /** Top-level content items from courses/{id}/contents. */
   function contentFrom(results) {
     if (!Array.isArray(results)) return [];
@@ -264,6 +294,8 @@
       const d = stripHtml(r.description || r.body || '');
       if (d) item.desc = d;
       if (nonEmpty(r.id)) item.id = str(r.id);
+      const link = contentLink(r);
+      if (link) item.url = link;
       // Progress is NOT exposed by the public contents endpoint -> omitted (renders as "progress not yet synced").
       out.push(item);
     }

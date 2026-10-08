@@ -1,7 +1,5 @@
 # UARK Blackboard Dashboard: personal Chrome extension (MV3, unpacked)
 
-> **Whiteboard: shelved v1.1.** This repo holds the v1.1 dashboard redesign as design work; it is not the build running day to day. Everything here follows [`PROTOCOL.md`](PROTOCOL.md): nothing is made up.
-
 This is a personal, **read-only** redesign of University of Arkansas Blackboard Ultra
 (learn.uark.edu), with grades for Pearson-backed courses pulled from Pearson MyLab. It uses **your own
 signed-in browser session** and shows only data it actually pulled. It contains
@@ -25,6 +23,20 @@ no sample data. When nothing has been pulled yet, every view says **"Not yet syn
 If you don't want the New Tab override, delete the `chrome_url_overrides` block from
 `manifest.json` and reload the extension. You can still reach the dashboard from the popup.
 
+## Build the dashboard
+
+The extension ships a static React bundle. From `dashboard-ui/`:
+
+```
+npm install
+npm run build
+```
+
+That typechecks and writes `dashboard/assets/dashboard.js` and `dashboard/assets/dashboard.css`.
+`dashboard.html` loads `shared/normalize.js` first (so `globalThis.BBX` exists), then the bundle.
+Reload the unpacked extension after a rebuild. `npm run dev` serves the same UI for layout work;
+outside the extension, chrome.storage is missing and every view says nothing is synced.
+
 ## Files
 
 | Path | Role |
@@ -34,7 +46,8 @@ If you don't want the New Tab override, delete the `chrome_url_overrides` block 
 | `shared/normalize.js` | Shared normalization module (`globalThis.BBX`), loaded by the content scripts, the worker, the dashboard and the popup. It turns raw API/DOM data into the `blackboard-mirror/data/courses.json` shape, adding provenance |
 | `content/blackboard.js` | Content script on learn.uark.edu. Calls the REST API (GET only, `credentials:'include'`) and falls back to scraping the DOM |
 | `content/pearson.js` | Content script on Pearson pages (all frames). Parses `Student/Results.aspx` with the real selectors (`BBX.parsePearsonResultsDocument`) |
-| `dashboard.html`, `dashboard/` | The v1.1 dashboard redesign (Today, Courses, course pages, Calendar, Grades, Diagnostics, quick-jump). Reads `chrome.storage.local`; see `FEATURE_INDEX.md` |
+| `dashboard.html`, `dashboard/assets/` | New-tab dashboard. React UI built to static files (see below). Reads `chrome.storage.local` through `BBX.mergeForDashboard`. Light theme is the default |
+| `dashboard-ui/` | Vite + React + TypeScript source for that dashboard. `npm run build` writes `dashboard/assets/dashboard.js` and `dashboard.css` |
 | `popup/` | Toolbar popup showing sync status per system, with Open dashboard and Sync now buttons |
 
 ## Data flow

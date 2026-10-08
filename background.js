@@ -137,6 +137,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (!fromExtensionPage(sender)) { sendResponse({ ok: false }); return false; }
       return reply(pokeOpenTabs({ force: true, reason: 'dashboard' }).then((r) => ({ ok: true, ...r })));
     }
+    case 'bbx:setPrefs': {
+      // UI prefs only. Course cache is never written from this message.
+      if (!fromExtensionPage(sender)) { sendResponse({ ok: false }); return false; }
+      const patch = msg.patch;
+      if (!patch || typeof patch !== 'object' || Array.isArray(patch)) { sendResponse({ ok: false }); return false; }
+      return reply(serialized(async () => {
+        const cur = (await getLocal(K.prefs))[K.prefs] || {};
+        const next = { ...cur };
+        if (patch.layout === 'list' || patch.layout === 'grid') next.layout = patch.layout;
+        if (patch.theme === 'light' || patch.theme === 'dark' || patch.theme === 'system') next.theme = patch.theme;
+        if (Array.isArray(patch.favorites)) next.favorites = patch.favorites.filter((id) => typeof id === 'string').slice(0, 200);
+        if (patch.pearsonMap && typeof patch.pearsonMap === 'object' && !Array.isArray(patch.pearsonMap)) {
+          const map = {};
+          for (const [k, v] of Object.entries(patch.pearsonMap)) {
+            if (typeof k === 'string' && typeof v === 'string' && k && v) map[k] = v;
+          }
+          next.pearsonMap = map;
+        }
+        await setLocal({ [K.prefs]: next });
+        return { ok: true };
+      }));
+    }
     case 'bbx:clearCache': {
       if (!fromExtensionPage(sender)) { sendResponse({ ok: false }); return false; }
       return reply(serialized(async () => {
