@@ -27,13 +27,10 @@ function CalendarBody({ snapshot, now, mode, view }: { snapshot: Snapshot; now: 
         <Link href="/calendar/recent" aria-current={view === "recent" ? "page" : undefined}>Recent</Link>
       </div>
       <div style={{ height: 14 }} />
-      {coverage === "none" ? <p className="empty-line">Due dates are not in this snapshot.</p> : (
-        <>
-          {view === "agenda" && <Agenda snapshot={snapshot} now={now} items={items} />}
-          {view === "month" && <Month snapshot={snapshot} now={now} items={items} />}
-          {view === "recent" && <Recent snapshot={snapshot} now={now} items={items} />}
-        </>
-      )}
+      {coverage === "none" && <p className="empty-line" style={view === "month" ? { marginBottom: 14 } : undefined}>Due dates are not in this snapshot.</p>}
+      {view === "month" && <Month snapshot={snapshot} now={now} items={items} />}
+      {coverage !== "none" && view === "agenda" && <Agenda snapshot={snapshot} now={now} items={items} />}
+      {coverage !== "none" && view === "recent" && <Recent snapshot={snapshot} now={now} items={items} />}
       <p className="foot"><a href="https://learn.uark.edu" target="_blank" rel="noopener noreferrer">Blackboard site</a></p>
     </>
   );

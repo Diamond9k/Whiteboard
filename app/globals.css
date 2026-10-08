@@ -249,6 +249,10 @@ h3 { margin: 0; font-size: 14px; font-weight: 600; }
   border-radius: 12px;
 }
 .card { padding: 12px 14px; }
+.card.card-click { position: relative; padding: 0; }
+.card-fill { display: block; padding: 12px 44px 12px 14px; text-decoration: none; color: inherit; border-radius: 12px; }
+.card-click:hover { background: var(--hover); }
+.card-click .star { position: absolute; top: 8px; right: 6px; z-index: 1; }
 .card-link, .row-link { display: block; text-decoration: none; color: inherit; }
 .card-link { padding: 12px 14px; }
 .card-link:hover, .row-link:hover { background: var(--hover); }
