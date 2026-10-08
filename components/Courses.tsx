@@ -89,17 +89,17 @@ function CoursesBody({ snapshot, now, mode }: { snapshot: Snapshot; now: Date; m
 
 function CourseCard({ course, now, favorite, onFavorite }: { course: Course; now: Date; favorite: boolean; onFavorite: (id: string) => void }) {
   return (
-    <article className="card">
-      <div className="card-top">
-        <Link href={`/courses/${encodeURIComponent(course.id)}`}><span className="code">{courseLabel(course)}</span></Link>
-        <button type="button" className="star" aria-pressed={favorite} aria-label={`Favorite ${courseLabel(course)}`} onClick={() => onFavorite(course.id)}>★</button>
-      </div>
-      <h3 style={{ marginTop: 6 }}>{course.title?.value || "Official title not synced"}</h3>
-      <p className="note">{nextDue(course, now)}</p>
-      <div className="lanes">
-        <div><div className="label">MyLab</div><div>{mylabCell(course)}</div></div>
-        <div><div className="label">Blackboard</div><div>{bbCell(course)}</div></div>
-      </div>
+    <article className="card card-click">
+      <Link className="card-fill" href={`/courses/${encodeURIComponent(course.id)}`}>
+        <div className="code">{courseLabel(course)}</div>
+        <h3 style={{ marginTop: 6 }}>{course.title?.value || "Official title not synced"}</h3>
+        <p className="note">{nextDue(course, now)}</p>
+        <div className="lanes">
+          <div><div className="label">MyLab</div><div>{mylabCell(course)}</div></div>
+          <div><div className="label">Blackboard</div><div>{bbCell(course)}</div></div>
+        </div>
+      </Link>
+      <button type="button" className="star" aria-pressed={favorite} aria-label={`Favorite ${courseLabel(course)}`} onClick={() => onFavorite(course.id)}>★</button>
     </article>
   );
 }

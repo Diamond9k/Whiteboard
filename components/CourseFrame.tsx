@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { availabilityLabel } from "@/lib/labels";
+import type { Stamp as StampType } from "@/lib/schema";
 import { courseLabel } from "@/lib/view";
 import { CourseProvider, Gate } from "./data";
 import { OpenLink, Stamp } from "./ui";
@@ -41,6 +42,11 @@ export function CourseFrame({ children }: { children: React.ReactNode }) {
   );
 }
 
+function sameProvenance(a?: StampType | null, b?: StampType | null): boolean {
+  if (!a || !b) return false;
+  return a.source === b.source && a.at === b.at;
+}
+
 function Frame({ id, children }: { id: string; children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -72,7 +78,7 @@ function Frame({ id, children }: { id: string; children: React.ReactNode }) {
                 <h1>{courseLabel(course)}</h1>
                 <p className="sub">{course.title?.value || "Official title not synced"}</p>
                 {course.statedDescription && <p className="note">{course.statedDescription.value} <Stamp stamp={course.statedDescription.stamp} /></p>}
-                <p className="note">{course.title && <Stamp stamp={course.title.stamp} />} {course.code && course.title?.stamp !== course.code.stamp && <Stamp stamp={course.code.stamp} />}</p>
+                <p className="note">{course.title && <Stamp stamp={course.title.stamp} />} {course.code && !sameProvenance(course.title?.stamp, course.code.stamp) && <Stamp stamp={course.code.stamp} />}</p>
                 {course.availability && <p className="note">{availabilityLabel(course.availability.value, course.availability.stamp.source)} <Stamp stamp={course.availability.stamp} /></p>}
                 {course.stale.length > 0 && <p className="note">Kept from an earlier read: {course.stale.join(", ")}.</p>}
               </div>
