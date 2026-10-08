@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <title>UARK Blackboard Dashboard</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="../shared/normalize.js"></script>
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <header class="head">
+    <span class="mark" aria-hidden="true">A</span>
+    <div class="head-text"><h1>Blackboard</h1><p>University of Arkansas · read-only dashboard</p></div>
+  </header>
+  <div id="status" class="status" aria-live="polite"><p class="muted">Loading…</p></div>
+  <div class="buttons" id="buttons">
+    <a id="signin" class="btn" href="https://learn.uark.edu/ultra/course" target="_blank" rel="noopener" hidden>Sign in to Blackboard <span aria-hidden="true">↗</span></a>
+    <button id="open" class="btn" type="button">Open dashboard</button>
+    <button id="sync" class="btn ghost" type="button">Sync now</button>
+  </div>
+  <p id="msg" class="msg" role="status"></p>
+  <p class="foot">Syncs through your open, signed-in Blackboard and MyLab tabs. Nothing is written back.</p>
+</body>
+</html>

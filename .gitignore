@@ -1,9 +1,5 @@
-node_modules
-.next
-out
-.DS_Store
+node_modules/
+dashboard-ui/node_modules/
+dashboard/index.html
 *.log
-.env
-.env.*
-next-env.d.ts
-tsconfig.tsbuildinfo
+.DS_Store
