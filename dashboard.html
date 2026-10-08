@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Blackboard · University of Arkansas</title>
+  <link rel="stylesheet" href="dashboard/styles.css">
+  <!-- All course data comes from chrome.storage.local (written by the content scripts). Nothing is hardcoded here. -->
+  <script src="shared/normalize.js"></script>
+  <script type="module" src="dashboard/app.js"></script>
+</head>
+<body>
+  <nav id="nav" class="sidenav" aria-label="Main navigation"></nav>
+  <div class="main">
+    <div id="notices" class="notices" aria-live="polite"></div>
+    <main id="view" class="view"><p class="loading">Loading cached data…</p></main>
+    <footer id="provenance" class="provenance-footer"></footer>
+  </div>
+  <noscript>This dashboard needs JavaScript.</noscript>
+</body>
+</html>
